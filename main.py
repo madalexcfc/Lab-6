@@ -1,88 +1,37 @@
-class File:
-    className = 'File'
-    objectsCount = 0
+class Employee:
+    def __init__(self, hours_worked, rate, bonus_coeff):
+        self.hours_worked = hours_worked
+        self.rate = rate
+        self.bonus_coeff = bonus_coeff
 
-    def __init__(self, name, kbs, type):
-        self._name = name
-        self._kbs = kbs
-        self._type = type
-        File.objectsCount = File.objectsCount + 1
+    def calculate_bonus(self):
+        return self.hours_worked * self.rate * self.bonus_coeff
 
-    def get_name(self):
-        return self._name
+class SeniorEmployee(Employee):
+    def __init__(self, hours_worked, rate, bonus_coeff, responsibility_level):
+        super().__init__(hours_worked, rate, bonus_coeff)
+        self.responsibility_level = responsibility_level
 
-    def set_name(self, n):
-        self._name = n
+    def salary_to_hours_ratio(self):
+        salary = self.hours_worked * self.rate + self.calculate_bonus()
+        return salary / self.hours_worked if self.hours_worked > 0 else 0
 
-    def get_kbs(self):
-        return self._kbs
+class Director(Employee):
+    def __init__(self, hours_worked, rate, bonus_coeff, department):
+        super().__init__(hours_worked, rate, bonus_coeff)
+        self.department = department
 
-    def set_kbs(self, kbs):
-        if kbs > 0:
-            self._kbs = kbs
-        else:
-            self._kbs = 0.1
+    def salary_to_hours_ratio(self):
+        salary = self.hours_worked * self.rate + self.calculate_bonus()
+        return salary / self.hours_worked if self.hours_worked > 0 else 0
 
-    def type(self):
-        return self._type
+employee = Employee(160, 20, 0.1)
+print(f"Премия сотрудника: {employee.calculate_bonus()}")
 
-    def info(self):
-        print(self._name)
-        print(f"Размер: {self._kbs} кб")
-        print(f'Формат: {self._type}')
+senior = SeniorEmployee(160, 30, 0.15, "High")
+print(f"Премия старшего сотрудника: {senior.calculate_bonus()}")
+print(f"Соотношение зарплаты к рабочим часам: {senior.salary_to_hours_ratio()}")
 
-    def kbsToBytes(self):
-        print(f'Размер в байтах: {self._kbs * 1024}')
-
-
-class Image(File):
-    className = 'Image'
-
-    def __init__(self, name, kbs, type, height, width):
-        super().__init__(name, kbs, type)
-        self.height = height
-        self.width = width
-
-    def set_height(self, height):
-        if height > 0:
-            self.height = height
-        else:
-            self.height = 1
-
-    def set_width(self, width):
-        if width > 0:
-            self.width = width
-        else:
-            self.width = 1
-
-    def info(self):
-        super().info()
-        print(f'Тип: {Image.className}')
-        print(f"Высота (пкс): {self.height}")
-        print(f'Ширина (пкс): {self.width}')
-
-    def amount(self):
-        print(f'Площадь в пикселях: {self.height * self.width}')
-
-    def __eq__(self, other):
-        return self.height == other.height and self.width == other.width
-
-
-b = File("Объект класса " + File.className, 11, 'TXT')
-b.info()
-b.kbsToBytes()
-
-print('\n')
-
-im = Image('background.jpg', 44.1, 'JPG', 800, 600)
-im2 = Image('new_background.jpg', 42.8, 'JPG', 800, 600)
-
-im.amount()
-im.kbsToBytes()
-
-if (im == im2) is True:
-    print(f'{im.get_name()} и {im2.get_name()} равны.')
-else:
-    print(f'{im.get_name()} и {im2.get_name()} не равны.')
-
-print(f'Objects count: {File.objectsCount}')
+director = Director(160, 50, 0.2, "Finance")
+print(f"Премия директора: {director.calculate_bonus()}")
+print(f"Соотношение зарплаты к рабочим часам: {director.salary_to_hours_ratio()}")
